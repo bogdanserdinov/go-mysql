@@ -1,16 +1,15 @@
 package json
 
 import (
+	"awesomeProject/nix/entity"
 	"encoding/json"
 	"log"
 	"net/http"
-	"../../entity"
 )
-
 //ParseJSON implement parsing functions from format json to Post struct
-func ParseJSON(res *http.Response) []Post{
+func ParseJSON(res *http.Response) []entity.Post {
 
-	p := []Post{}
+	p := []entity.Post{}
 
 	err := json.NewDecoder(res.Body).Decode(&p)
 
