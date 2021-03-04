@@ -1,14 +1,14 @@
 package operation
 
 import (
-	"awesomeProject/nix/pkg/db"
+	"awesomeProject/nix/entity"
 	"awesomeProject/nix/pkg/json"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-func getPosts(id int){
+func GetPosts(id int) []entity.Post{
 	request := fmt.Sprintf("https://jsonplaceholder.typicode.com/posts?userId=%d",id)
 	response, err := http.Get(request)
 	if err != nil {
@@ -17,6 +17,8 @@ func getPosts(id int){
 
 	p := json.ParseJSON(response)	//parse post info
 
-	go db.WriteToDBPost(p)
+	return p
+
+	//go db.WriteToDBPost(p)
 }
 
