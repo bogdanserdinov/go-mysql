@@ -2,15 +2,17 @@ package operation
 
 import (
 	"awesomeProject/nix/entity"
+	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 )
 
 // GetComment required for getting comments from comment on JSON placeholder
-func GetComment(id int) []entity.Comment {
-	url := fmt.Sprintf("https://jsonplaceholder.typicode.com/comments?postId=%d", id)
+func GetComment(p entity.Post) {
+	url := fmt.Sprintf("https://jsonplaceholder.typicode.com/comments?postId=%d",p.ID)
 
 	response, err := http.Get(url)
 
@@ -20,8 +22,8 @@ func GetComment(id int) []entity.Comment {
 
 	c := []entity.Comment{}
 
-	err = json.NewDecoder(response.Body).Decode(&c)
 
+	err = json.NewDecoder(response.Body).Decode(&c)
 	if err != nil {
 		log.Fatal("failed in decoding json to comment : ", err)
 	}
@@ -29,5 +31,9 @@ func GetComment(id int) []entity.Comment {
 	if err = response.Body.Close(); err != nil {
 		log.Fatal("failed to close response.Body : ", err)
 	}
-	return c
+
+	var mutex1 = &sync.Mutex{}
+	for _,value := range c{
+		go db.WriteToDBComment(value,mutex1)
+	}
 }

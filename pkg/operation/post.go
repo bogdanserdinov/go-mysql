@@ -18,6 +18,7 @@ func GetPosts(id int) []entity.Post {
 
 	p := json.ParseJSON(response) //parse post info
 
+
 	return p
 
 	//go db.WriteToDBPost(p)
