@@ -3,6 +3,7 @@ package operation
 import (
 	"awesomeProject/nix/entity"
 	"awesomeProject/nix/pkg/db"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -33,7 +34,13 @@ func GetComment(p entity.Post) {
 	}
 
 	var mutex1 = &sync.Mutex{}
+
+	database,err := sql.Open("mysql","root:blablabla29032002@/public")
+	if err != nil {
+		log.Fatal("failed in opening db : ",err)
+	}
+	defer database.Close()
 	for _,value := range c{
-		go db.WriteToDBComment(value,mutex1)
+		go db.WriteToDBComment(value,database,mutex1)
 	}
 }
