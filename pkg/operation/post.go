@@ -15,11 +15,6 @@ func GetPosts(id int) []entity.Post {
 	if err != nil {
 		log.Fatal("failed in get response from url : ", err)
 	}
-
 	p := json.ParseJSON(response) //parse post info
-
-
 	return p
-
-	//go db.WriteToDBPost(p)
 }

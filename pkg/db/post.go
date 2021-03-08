@@ -2,25 +2,15 @@ package db
 
 import (
 	"awesomeProject/nix/entity"
-	"database/sql"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
+	"gorm.io/gorm"
 	"sync"
 )
 
 //WriteToDBPost - function required for writing data to post entity
-func WriteToDBPost(p entity.Post,db *sql.DB,mutex *sync.Mutex){
+func WriteToDBPost(p entity.Post,db *gorm.DB,mutex *sync.Mutex){
 	mutex.Lock()
-
-	fmt.Println("writing to db post...")
-	fmt.Println(p)
-
-	_,err := db.Exec("insert into public.posts values(?,?,?,?) ",p.UserID,p.ID,p.Title,p.Body)
-
-	if err != nil {
-		log.Fatal("failed in executing command : ",err,p)
-	}
-
+	//db.Create(&p)
+	db.Select("UserID", "ID", "Title","Body").Create(&p)
 	mutex.Unlock()
 }
