@@ -2,16 +2,19 @@ package main
 
 import (
 	"awesomeProject/nix/pkg/db"
+	"awesomeProject/nix/pkg/handlers"
 	"awesomeProject/nix/pkg/operation"
 	"fmt"
+	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
 	"sync"
 	"time"
 )
 
-func GetDate(){
+func GetDate(w http.ResponseWriter,r *http.Request){
 	p := operation.GetPosts(7)
 
 	var mutex = &sync.Mutex{}
@@ -31,6 +34,16 @@ func GetDate(){
 }
 
 func main(){
-	//r := mux.NewRouter()
+	r := mux.NewRouter()
+
+	r.HandleFunc("/api/get/",GetDate)
+
+	r.HandleFunc("/api/post/",handlers.GetAllPost).Methods("GET")
+	r.HandleFunc("/api/post/",handlers.CreatePost).Methods("POST")
+	r.HandleFunc("/api/post/{id}",handlers.GetAllPost).Methods("GET")
+	r.HandleFunc("/api/post/{id}",handlers.DeletePost).Methods("DELETE")
+	r.HandleFunc("/api/post/{id}",handlers.UpdatePost).Methods("PUT")
+
+	log.Fatal(http.ListenAndServe(":8080",r))
 
 }
