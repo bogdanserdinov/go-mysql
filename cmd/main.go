@@ -11,11 +11,11 @@ import (
 	"time"
 )
 
-func main(){
+func GetDate(){
 	p := operation.GetPosts(7)
 
 	var mutex = &sync.Mutex{}
-	
+
 	dsn := "root:blablabla29032002@tcp(127.0.0.1:3306)/public?charset=utf8mb4&parseTime=True&loc=Local"
 	gormDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -28,4 +28,9 @@ func main(){
 
 	time.Sleep(2*time.Second)
 	fmt.Println("successfully completed writing to db")
+}
+
+func main(){
+	//r := mux.NewRouter()
+
 }
