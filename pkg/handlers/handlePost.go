@@ -5,7 +5,6 @@ import (
 	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -27,7 +26,6 @@ func GetOnePost(w http.ResponseWriter,r *http.Request){
 	gormDB.Where("ID = ?", idStr).First(&posts)
 	json.NewEncoder(w).Encode(&posts)
 	xml.NewEncoder(w).Encode(&posts)
-
 }
 
 func GetAllPost(w http.ResponseWriter,r *http.Request){
@@ -76,7 +74,6 @@ func UpdatePost(w http.ResponseWriter,r *http.Request){
 		log.Println("could not convert id to int")
 	}
 
-	fmt.Println(idStr)
 	var newPost entity.Post
 	json.NewDecoder(r.Body).Decode(&newPost)
 
