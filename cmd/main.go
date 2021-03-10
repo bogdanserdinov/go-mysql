@@ -6,8 +6,6 @@ import (
 	"awesomeProject/nix/pkg/operation"
 	"fmt"
 	"github.com/gorilla/mux"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"sync"
@@ -19,11 +17,7 @@ func GetDate(w http.ResponseWriter,r *http.Request){
 
 	var mutex = &sync.Mutex{}
 
-	dsn := "root:blablabla29032002@tcp(127.0.0.1:3306)/public?charset=utf8mb4&parseTime=True&loc=Local"
-	gormDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("failed in opening db : ",err)
-	}
+	gormDB := db.OpenDataBase()
 	for _,value := range p{
 		go db.WriteToDBPost(value,gormDB,mutex)
 		go operation.GetComment(value)
@@ -33,10 +27,16 @@ func GetDate(w http.ResponseWriter,r *http.Request){
 	fmt.Println("successfully completed writing to db")
 }
 
+func HomePage(w http.ResponseWriter, r *http.Request){
+	w.Write([]byte("main page"))
+}
+
 func main(){
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api/get/",GetDate)
+
+	r.HandleFunc("/",HomePage)
 
 	r.HandleFunc("/api/post/",handlers.GetAllPost).Methods("GET")
 	r.HandleFunc("/api/post/",handlers.CreatePost).Methods("POST")
@@ -51,5 +51,4 @@ func main(){
 	r.HandleFunc("/api/comment/{id}",handlers.UpdateComment).Methods("PUT")
 
 	log.Fatal(http.ListenAndServe(":8080",r))
-
 }

@@ -5,8 +5,6 @@ import (
 	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"fmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"sync"
@@ -33,12 +31,7 @@ func GetComment(p entity.Post) {
 
 	var mutex1 = &sync.Mutex{}
 
-	dsn := "root:blablabla29032002@tcp(127.0.0.1:3306)/public?charset=utf8mb4&parseTime=True&loc=Local"
-	gormDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("failed in opening db : ",err)
-	}
-
+	gormDB := db.OpenDataBase()
 	for _,value := range c{
 		go db.WriteToDBComment(value,gormDB,mutex1)
 	}
