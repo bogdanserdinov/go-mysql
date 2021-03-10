@@ -1,42 +1,16 @@
 package main
 
 import (
-	"awesomeProject/nix/pkg/db"
 	"awesomeProject/nix/pkg/handlers"
-	"awesomeProject/nix/pkg/operation"
-	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"sync"
-	"time"
 )
-
-func GetDate(w http.ResponseWriter,r *http.Request){
-	p := operation.GetPosts(7)
-
-	var mutex = &sync.Mutex{}
-
-	gormDB := db.OpenDataBase()
-	for _,value := range p{
-		go db.WriteToDBPost(value,gormDB,mutex)
-		go operation.GetComment(value)
-	}
-
-	time.Sleep(2*time.Second)
-	fmt.Println("successfully completed writing to db")
-}
-
-func HomePage(w http.ResponseWriter, r *http.Request){
-	w.Write([]byte("main page"))
-}
 
 func main(){
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/get/",GetDate)
-
-	r.HandleFunc("/",HomePage)
+	r.HandleFunc("/api/get/",handlers.GetDate)
 
 	r.HandleFunc("/api/post/",handlers.GetAllPost).Methods("GET")
 	r.HandleFunc("/api/post/",handlers.CreatePost).Methods("POST")
