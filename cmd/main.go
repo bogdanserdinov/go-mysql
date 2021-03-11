@@ -8,7 +8,7 @@ import (
 )
 
 func main(){
-	r := mux.NewRouter()
+	r := mux.NewRouter().StrictSlash(true)
 
 	r.HandleFunc("/api/get/",handlers.GetDate)
 
