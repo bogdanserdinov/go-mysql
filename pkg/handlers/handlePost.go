@@ -35,16 +35,23 @@ func GetOnePost(e echo.Context) error{
 	if err != nil{
 		log.Println("could not convert post to xml",err.Error())
 	}
-	return e.String(http.StatusOK,fmt.Sprint(jsonPost,"\n",xmlPost))
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
-func GetAllPost(w http.ResponseWriter,r *http.Request){
+func GetAllPost(e echo.Context) error{
 	gormDB := db.OpenDataBase()
 	var posts []entity.Post
 	gormDB.Table("posts").Select("UserID, ID, Title,Body").Scan(&posts)
 
-	json.NewEncoder(w).Encode(&posts)
-	xml.NewEncoder(w).Encode(&posts)
+	jsonPost,err := json.Marshal(&posts)
+	if err != nil{
+		log.Println("could not convert post to json",err.Error())
+	}
+	xmlPost,err := xml.Marshal(&posts)
+	if err != nil{
+		log.Println("could not convert post to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
 func CreatePost(w http.ResponseWriter,r *http.Request){
