@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
@@ -54,20 +53,26 @@ func GetAllPost(e echo.Context) error{
 	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
-func CreatePost(w http.ResponseWriter,r *http.Request){
+func CreatePost(e echo.Context) error{
 	var newPost entity.Post
-	json.NewDecoder(r.Body).Decode(&newPost)
+	json.NewDecoder(e.Request().Body).Decode(&newPost)
 
 	gormDB := db.OpenDataBase()
 	gormDB.Create(&newPost)
 
-	json.NewEncoder(w).Encode(&newPost)
-	xml.NewEncoder(w).Encode(&newPost)
+	jsonPost,err := json.Marshal(&newPost)
+	if err != nil{
+		log.Println("could not convert post to json",err.Error())
+	}
+	xmlPost,err := xml.Marshal(&newPost)
+	if err != nil{
+		log.Println("could not convert post to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
-func DeletePost(w http.ResponseWriter,r *http.Request){
-	vars := mux.Vars(r)
-	id := vars["id"]
+func DeletePost(e echo.Context) error{
+	id := e.Param("id")
 	idStr,err := strconv.Atoi(id)
 	if err != nil{
 		log.Println("could not convert id to int",err.Error())
@@ -78,13 +83,21 @@ func DeletePost(w http.ResponseWriter,r *http.Request){
 	gormDB.First(&newPost, idStr)
 	gormDB.Delete(&entity.Post{}, idStr)
 
-	json.NewEncoder(w).Encode(&newPost)
-	xml.NewEncoder(w).Encode(&newPost)
+	jsonPost,err := json.Marshal(&newPost)
+	if err != nil{
+		log.Println("could not convert post to json",err.Error())
+	}
+
+	xmlPost,err := xml.Marshal(&newPost)
+	if err != nil{
+		log.Println("could not convert post to xml",err.Error())
+	}
+
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
-func UpdatePost(w http.ResponseWriter,r *http.Request){
-	vars := mux.Vars(r)
-	id := vars["id"]
+func UpdatePost(e echo.Context) error{
+	id := e.Param("id")
 
 	idStr,err := strconv.Atoi(id)
 	if err != nil{
@@ -92,7 +105,7 @@ func UpdatePost(w http.ResponseWriter,r *http.Request){
 	}
 
 	var newPost entity.Post
-	json.NewDecoder(r.Body).Decode(&newPost)
+	json.NewDecoder(e.Request().Body).Decode(&newPost)
 
 	gormDB := db.OpenDataBase()
 	gormDB.Model(&entity.Post{}).Where("id = ?",idStr).Updates(entity.Post{
@@ -101,7 +114,16 @@ func UpdatePost(w http.ResponseWriter,r *http.Request){
 		Body:   newPost.Body,
 	})
 
-	json.NewEncoder(w).Encode(&newPost)
-	xml.NewEncoder(w).Encode(&newPost)
+	jsonPost,err := json.Marshal(&newPost)
+	if err != nil{
+		log.Println("could not convert post to json",err.Error())
+	}
+
+	xmlPost,err := xml.Marshal(&newPost)
+	if err != nil{
+		log.Println("could not convert post to xml",err.Error())
+	}
+
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
