@@ -6,15 +6,14 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/labstack/echo"
 	"log"
 	"net/http"
 	"strconv"
 )
 
-func GetOneComment(w http.ResponseWriter,r *http.Request){
-	vars := mux.Vars(r)
-	id := vars["id"]
+func GetOneComment(e echo.Context) error{
+	id := e.Param("id")
 
 	gormDB := db.OpenDataBase()
 
@@ -25,33 +24,54 @@ func GetOneComment(w http.ResponseWriter,r *http.Request){
 		log.Println("could not convert id to int",err.Error())
 	}
 	gormDB.Where("ID = ?", idStr).First(&comments)
-	json.NewEncoder(w).Encode(&comments)
-	xml.NewEncoder(w).Encode(&comments)
+
+	jsonComment,err := json.Marshal(&comments)
+	if err != nil{
+		log.Println("could not convert comment to json",err.Error())
+	}
+	xmlComment,err := xml.Marshal(&comments)
+	if err != nil{
+		log.Println("could not convert comment to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
 }
 
-func GetAllComment(w http.ResponseWriter,r *http.Request){
+func GetAllComment(e echo.Context) error{
 	gormDB := db.OpenDataBase()
 	var comments []entity.Comment
 	gormDB.Table("comments").Select("PostID, ID, Name, Email, Body").Scan(&comments)
 
-	json.NewEncoder(w).Encode(&comments)
-	xml.NewEncoder(w).Encode(&comments)
+	jsonComment,err := json.Marshal(&comments)
+	if err != nil{
+		log.Println("could not convert comment to json",err.Error())
+	}
+	xmlComment,err := xml.Marshal(&comments)
+	if err != nil{
+		log.Println("could not convert comment to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
 }
 
-func CreateComment(w http.ResponseWriter,r *http.Request){
+func CreateComment(e echo.Context) error{
 	var newComment entity.Comment
-	json.NewDecoder(r.Body).Decode(&newComment)
+	json.NewDecoder(e.Request().Body).Decode(&newComment)
 
 	gormDB := db.OpenDataBase()
 	gormDB.Create(&newComment)
 
-	json.NewEncoder(w).Encode(&newComment)
-	xml.NewEncoder(w).Encode(&newComment)
+	jsonComment,err := json.Marshal(&newComment)
+	if err != nil{
+		log.Println("could not convert comment to json",err.Error())
+	}
+	xmlComment,err := xml.Marshal(&newComment)
+	if err != nil{
+		log.Println("could not convert comment to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
 }
 
-func DeleteComment(w http.ResponseWriter,r *http.Request){
-	vars := mux.Vars(r)
-	id := vars["id"]
+func DeleteComment(e echo.Context) error{
+	id := e.Param("id")
 	idStr,err := strconv.Atoi(id)
 	if err != nil{
 		log.Println("could not convert id to int",err.Error())
@@ -62,13 +82,19 @@ func DeleteComment(w http.ResponseWriter,r *http.Request){
 	gormDB.First(&newComment, idStr)
 	gormDB.Delete(&entity.Comment{}, idStr)
 
-	json.NewEncoder(w).Encode(&newComment)
-	xml.NewEncoder(w).Encode(&newComment)
+	jsonComment,err := json.Marshal(&newComment)
+	if err != nil{
+		log.Println("could not convert comment to json",err.Error())
+	}
+	xmlComment,err := xml.Marshal(&newComment)
+	if err != nil{
+		log.Println("could not convert comment to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
 }
 
-func UpdateComment(w http.ResponseWriter,r *http.Request){
-	vars := mux.Vars(r)
-	id := vars["id"]
+func UpdateComment(e echo.Context) error{
+	id := e.Param("id")
 
 	idStr,err := strconv.Atoi(id)
 	if err != nil{
@@ -76,17 +102,23 @@ func UpdateComment(w http.ResponseWriter,r *http.Request){
 	}
 
 	var newComment entity.Comment
-	json.NewDecoder(r.Body).Decode(&newComment)
+	json.NewDecoder(e.Request().Body).Decode(&newComment)
 
 	gormDB := db.OpenDataBase()
-	gormDB.Model(&entity.Comment{}).Where("id = ?",idStr).Updates(entity.Comment{
+	gormDB.Model(&entity.Post{}).Where("id = ?",idStr).Updates(entity.Comment{
 		PostID: newComment.PostID,
-		Name:  newComment.Name,
+		Name:  	newComment.Name,
 		Email:  newComment.Email,
 		Body:   newComment.Body,
 	})
 
-	json.NewEncoder(w).Encode(&newComment)
-	xml.NewEncoder(w).Encode(&newComment)
+	jsonComment,err := json.Marshal(&newComment)
+	if err != nil{
+		log.Println("could not convert comment to json",err.Error())
+	}
+	xmlComment,err := xml.Marshal(&newComment)
+	if err != nil{
+		log.Println("could not convert comment to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
 }
-
