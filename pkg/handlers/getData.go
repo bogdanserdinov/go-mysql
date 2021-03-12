@@ -3,12 +3,13 @@ package handlers
 import (
 	"awesomeProject/nix/pkg/db"
 	"awesomeProject/nix/pkg/operation"
+	"github.com/labstack/echo"
 	"net/http"
 	"sync"
 	"time"
 )
 
-func GetDate(w http.ResponseWriter,r *http.Request){
+func GetData(e echo.Context) error{
 	p := operation.GetPosts(7)
 
 	var mutex = &sync.Mutex{}
@@ -20,6 +21,6 @@ func GetDate(w http.ResponseWriter,r *http.Request){
 	}
 
 	time.Sleep(2*time.Second)
-	w.Write([]byte("successfully completed writing to db"))
+	return e.String(http.StatusOK,"successfully completed writing to db")
 }
 
