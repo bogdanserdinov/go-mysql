@@ -5,15 +5,17 @@ import (
 	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"encoding/xml"
+	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/labstack/echo"
 	"log"
 	"net/http"
 	"strconv"
 )
 
-func GetOnePost(w http.ResponseWriter,r *http.Request){
-	vars := mux.Vars(r)
-	id := vars["id"]
+func GetOnePost(e echo.Context) error{
+	id := e.Param("id")
+
 
 	gormDB := db.OpenDataBase()
 
@@ -24,8 +26,16 @@ func GetOnePost(w http.ResponseWriter,r *http.Request){
 		log.Println("could not convert id to int",err.Error())
 	}
 	gormDB.Where("ID = ?", idStr).First(&posts)
-	json.NewEncoder(w).Encode(&posts)
-	xml.NewEncoder(w).Encode(&posts)
+
+	jsonPost,err := json.Marshal(&posts)
+	if err != nil{
+		log.Println("could not convert post to json",err.Error())
+	}
+	xmlPost,err := xml.Marshal(&posts)
+	if err != nil{
+		log.Println("could not convert post to xml",err.Error())
+	}
+	return e.String(http.StatusOK,fmt.Sprint(jsonPost,"\n",xmlPost))
 }
 
 func GetAllPost(w http.ResponseWriter,r *http.Request){
