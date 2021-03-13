@@ -1,0 +1,205 @@
+basePath: /api/
+host: localhost:8080
+info:
+  contact: {}
+  description: this is simple REST API which works with MySQL and written using Echo
+    framework.
+  title: REST API with Echo
+  version: "1.0"
+paths:
+  /comment/:
+    post:
+      consumes:
+      - application/json
+      description: create new comment
+      operationId: create-new-comment
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Create comment
+      tags:
+      - Comment
+  /comment/:id:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID(Comment)
+      operationId: get-comment-by-id
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Show a comment
+      tags:
+      - Comment
+    post:
+      consumes:
+      - application/json
+      description: delete comment
+      operationId: delete-comment
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Delete comment
+      tags:
+      - Comment
+    put:
+      consumes:
+      - application/json
+      description: update comment
+      operationId: update-comment
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Update comment
+      tags:
+      - Comment
+  /comments/:
+    get:
+      consumes:
+      - application/json
+      description: get all comments
+      operationId: get-list-of-comments
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: List comments
+      tags:
+      - Comment
+  /post/:
+    get:
+      consumes:
+      - application/json
+      description: get all posts
+      operationId: get-list-of-posts
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: List posts
+      tags:
+      - Post
+    post:
+      consumes:
+      - application/json
+      description: create new post
+      operationId: create-new-post
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Create post
+      tags:
+      - Post
+  /post/:id:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID(Post)
+      operationId: get-post-by-id
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Show a post
+      tags:
+      - Post
+    post:
+      consumes:
+      - application/json
+      description: delete post post
+      operationId: delete-post
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Delete post
+      tags:
+      - Post
+    put:
+      consumes:
+      - application/json
+      description: update post
+      operationId: update-post
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      - text/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+      summary: Update post
+      tags:
+      - Post
+swagger: "2.0"
