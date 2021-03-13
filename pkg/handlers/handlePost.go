@@ -12,15 +12,24 @@ import (
 	"strconv"
 )
 
+
+// @Summary Show a post
+// @Tags Post
+// @Description get string by ID(Post)
+// @ID get-string-by-int-post
+// @Accept  json
+// @Produce  json
+// @Produce  xml
+// @Param id path int true "Post ID"
+// @Success 200 {object} entity.Post
+// @Header 200 {string} Token "qwerty"
+// @Router /post/:id [get]
 func GetOnePost(e echo.Context) error{
 	id := e.Param("id")
-
-
 	gormDB := db.OpenDataBase()
 
 	var posts entity.Post
 	idStr,err := strconv.Atoi(id)
-
 	if err != nil{
 		log.Println("could not convert id to int",err.Error())
 	}
@@ -37,6 +46,17 @@ func GetOnePost(e echo.Context) error{
 	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
+
+// @Summary List posts
+// @Description get all posts
+// @Tags Post
+// @ID get-list-of-posts
+// @Accept  json
+// @Produce  json
+// @Produce xml
+// @Failure 404 {string}
+// @Success 200 {array} entity.Post
+// @Router /post/ [get]
 func GetAllPost(e echo.Context) error{
 	gormDB := db.OpenDataBase()
 	var posts []entity.Post
@@ -45,14 +65,26 @@ func GetAllPost(e echo.Context) error{
 	jsonPost,err := json.Marshal(&posts)
 	if err != nil{
 		log.Println("could not convert post to json",err.Error())
+		return e.String(http.StatusNotFound,fmt.Sprint("could not parse json"))
 	}
 	xmlPost,err := xml.Marshal(&posts)
 	if err != nil{
 		log.Println("could not convert post to xml",err.Error())
+		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
 	}
 	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
+// @Summary Create post
+// @Description create new post
+// @Tags Post
+// @ID create-new-post
+// @Accept  json
+// @Produce  json
+// @Produce xml
+// @Failure 404 {string}
+// @Success 200 {object} entity.Post
+// @Router /post/ [post]
 func CreatePost(e echo.Context) error{
 	var newPost entity.Post
 	json.NewDecoder(e.Request().Body).Decode(&newPost)
@@ -63,19 +95,34 @@ func CreatePost(e echo.Context) error{
 	jsonPost,err := json.Marshal(&newPost)
 	if err != nil{
 		log.Println("could not convert post to json",err.Error())
+		return e.String(http.StatusNotFound,fmt.Sprint("could not parse json"))
 	}
 	xmlPost,err := xml.Marshal(&newPost)
 	if err != nil{
 		log.Println("could not convert post to xml",err.Error())
+		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
 	}
 	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
+
+// @Summary Delete post
+// @Description delete post post
+// @Tags Post
+// @ID delete-post
+// @Accept  json
+// @Produce  json
+// @Produce xml
+// @Param id path int true "Post ID"
+// @Failure 404 {string}
+// @Success 200 {object} entity.Post
+// @Router /post/:id [post]
 func DeletePost(e echo.Context) error{
 	id := e.Param("id")
 	idStr,err := strconv.Atoi(id)
 	if err != nil{
 		log.Println("could not convert id to int",err.Error())
+		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
 	}
 
 	var newPost entity.Post
@@ -86,6 +133,7 @@ func DeletePost(e echo.Context) error{
 	jsonPost,err := json.Marshal(&newPost)
 	if err != nil{
 		log.Println("could not convert post to json",err.Error())
+		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
 	}
 
 	xmlPost,err := xml.Marshal(&newPost)
@@ -96,6 +144,17 @@ func DeletePost(e echo.Context) error{
 	return e.String(http.StatusOK,fmt.Sprint(string(jsonPost),"\n",string(xmlPost)))
 }
 
+
+// @Summary Update post
+// @Description update post
+// @Tags Post
+// @ID update-post
+// @Accept  json
+// @Produce  json
+// @Produce xml
+// @Failure 404 {string}
+// @Success 200 {object} entity.Post
+// @Router /post/:id [put]
 func UpdatePost(e echo.Context) error{
 	id := e.Param("id")
 
