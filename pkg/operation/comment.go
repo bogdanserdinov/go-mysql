@@ -18,7 +18,7 @@ func GetComment(p entity.Post) {
 		log.Fatal("failed to get json command : ", err)
 	}
 
-	c := []entity.Comment{}
+	var c []entity.Comment
 
 	err = json.NewDecoder(response.Body).Decode(&c)
 	if err != nil {
@@ -29,10 +29,10 @@ func GetComment(p entity.Post) {
 		log.Fatal("failed to close response.Body : ", err)
 	}
 
-	var mutex1 = &sync.Mutex{}
+	var mutex = &sync.Mutex{}
 
 	gormDB := db.OpenDataBase()
 	for _,value := range c{
-		go db.WriteToDBComment(value,gormDB,mutex1)
+		go db.WriteToDBComment(value,gormDB,mutex)
 	}
 }

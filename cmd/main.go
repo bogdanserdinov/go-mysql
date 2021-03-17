@@ -10,10 +10,8 @@ import (
 // @title REST API with Echo
 // @version 1.0
 // @description this is simple REST API which works with MySQL and written using Echo framework.
-
 // @host localhost:8080
 // @BasePath /api/
-
 func main(){
 	e := echo.New()
 
