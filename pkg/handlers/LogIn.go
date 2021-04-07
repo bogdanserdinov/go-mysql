@@ -2,10 +2,9 @@ package handlers
 
 import (
 	"github.com/labstack/echo"
-	"text/template"
+	"net/http"
 )
 
-func logIn(c echo.Context) error{
-	tmpl := template.Must(template.ParseGlob("templates/index.gohtml"))
-	tmpl.Execute()
+func LogIn(c echo.Context) error{
+	return c.Render(http.StatusOK,"././templates/index.html",nil)
 }
