@@ -1,9 +1,9 @@
 package operation
 
 import (
-	"awesomeProject/nix/entity"
-	"awesomeProject/nix/pkg/json"
 	"fmt"
+	"github.com/bogdanserdinov/go-mysql/entity"
+	"github.com/bogdanserdinov/go-mysql/pkg/json"
 	"log"
 	"net/http"
 )

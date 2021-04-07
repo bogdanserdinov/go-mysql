@@ -1,7 +1,7 @@
 package db
 
 import (
-	"awesomeProject/nix/entity"
+	"github.com/bogdanserdinov/go-mysql/entity"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 	"sync"

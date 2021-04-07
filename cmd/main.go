@@ -1,8 +1,8 @@
 package main
 
 import (
-	"awesomeProject/nix/pkg/handlers"
 	_ "github.com/bogdanserdinov/go-mysql/docs"
+	"github.com/bogdanserdinov/go-mysql/pkg/handlers"
 	"github.com/labstack/echo"
 	"github.com/swaggo/echo-swagger"
 )
@@ -20,8 +20,6 @@ func main(){
 	e.File("/login", "././templates/index.html")
  
 	e.GET("/api/get-data",handlers.GetData)
-
-
 
 	e.GET("/api/post/",handlers.GetAllPost)
 	e.POST("/api/post/",handlers.CreatePost)

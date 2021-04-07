@@ -1,8 +1,8 @@
 package json
 
 import (
-	"awesomeProject/nix/entity"
 	"encoding/json"
+	"github.com/bogdanserdinov/go-mysql/entity"
 	"log"
 	"net/http"
 )
@@ -10,7 +10,7 @@ import (
 //ParseJSON implement parsing functions from format json to Post struct
 func ParseJSON(res *http.Response) []entity.Post {
 
-	p := []entity.Post{}
+	var p []entity.Post
 
 	err := json.NewDecoder(res.Body).Decode(&p)
 

@@ -1,10 +1,10 @@
 package operation
 
 import (
-	"awesomeProject/nix/entity"
-	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"fmt"
+	"github.com/bogdanserdinov/go-mysql/entity"
+	"github.com/bogdanserdinov/go-mysql/pkg/db"
 	"log"
 	"net/http"
 	"sync"

@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"awesomeProject/nix/entity"
-	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"github.com/bogdanserdinov/go-mysql/entity"
+	"github.com/bogdanserdinov/go-mysql/pkg/db"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"

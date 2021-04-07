@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"awesomeProject/nix/pkg/db"
-	"awesomeProject/nix/pkg/operation"
+	"github.com/bogdanserdinov/go-mysql/pkg/db"
+	"github.com/bogdanserdinov/go-mysql/pkg/operation"
 	"github.com/labstack/echo"
 	"net/http"
 	"sync"
