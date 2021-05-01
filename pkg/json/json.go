@@ -19,4 +19,3 @@ func ParseJSON(res *http.Response) []entity.Post {
 	}
 	return p
 }
-

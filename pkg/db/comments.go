@@ -8,7 +8,7 @@ import (
 )
 
 //WriteToDBComment - function required for writing data to comment entity
-func WriteToDBComment(c entity.Comment,db *gorm.DB,mutex *sync.Mutex) {
+func WriteToDBComment(c entity.Comment, db *gorm.DB, mutex *sync.Mutex) {
 	mutex.Lock()
 	db.Create(&c)
 	mutex.Unlock()

@@ -9,18 +9,17 @@ import (
 	"time"
 )
 
-func GetData(e echo.Context) error{
+func GetData(e echo.Context) error {
 	p := operation.GetPosts(7)
 
 	var mutex = &sync.Mutex{}
 
 	gormDB := db.OpenDataBase()
-	for _,value := range p{
-		go db.WriteToDBPost(value,gormDB,mutex)
+	for _, value := range p {
+		go db.WriteToDBPost(value, gormDB, mutex)
 		go operation.GetComment(value)
 	}
 
-	time.Sleep(2*time.Second)
-	return e.String(http.StatusOK,"successfully completed writing to db")
+	time.Sleep(2 * time.Second)
+	return e.String(http.StatusOK, "successfully completed writing to db")
 }
-
