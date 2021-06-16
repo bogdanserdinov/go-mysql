@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"awesomeProject/nix/entity"
-	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"github.com/bogdanserdinov/go-mysql/entity"
+	"github.com/bogdanserdinov/go-mysql/pkg/db"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
@@ -22,30 +22,30 @@ import (
 // @Param id path int true "Comment ID"
 // @Success 200 {integer} integer 1
 // @Router /comment/:id [get]
-func GetOneComment(e echo.Context) error{
+func GetOneComment(e echo.Context) error {
 	id := e.Param("id")
 
 	gormDB := db.OpenDataBase()
 
 	var comments entity.Comment
-	idStr,err := strconv.Atoi(id)
+	idStr, err := strconv.Atoi(id)
 
-	if err != nil{
-		log.Println("could not convert id to int",err.Error())
+	if err != nil {
+		log.Println("could not convert id to int", err.Error())
 	}
 	gormDB.Where("ID = ?", idStr).First(&comments)
 
-	jsonComment,err := json.Marshal(&comments)
-	if err != nil{
-		log.Println("could not convert comment to json",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse json"))
+	jsonComment, err := json.Marshal(&comments)
+	if err != nil {
+		log.Println("could not convert comment to json", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse json"))
 	}
-	xmlComment,err := xml.Marshal(&comments)
-	if err != nil{
-		log.Println("could not convert comment to xml",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
+	xmlComment, err := xml.Marshal(&comments)
+	if err != nil {
+		log.Println("could not convert comment to xml", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse xml"))
 	}
-	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
+	return e.String(http.StatusOK, fmt.Sprint(string(jsonComment), "\n", string(xmlComment)))
 }
 
 // @Summary List comments
@@ -57,22 +57,22 @@ func GetOneComment(e echo.Context) error{
 // @Produce xml
 // @Success 200 {integer} integer 1
 // @Router /comments/ [get]
-func GetAllComment(e echo.Context) error{
+func GetAllComment(e echo.Context) error {
 	gormDB := db.OpenDataBase()
 	var comments []entity.Comment
 	gormDB.Table("comments").Select("PostID, ID, Name, Email, Body").Scan(&comments)
 
-	jsonComment,err := json.Marshal(&comments)
-	if err != nil{
-		log.Println("could not convert comment to json",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse json"))
+	jsonComment, err := json.Marshal(&comments)
+	if err != nil {
+		log.Println("could not convert comment to json", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse json"))
 	}
-	xmlComment,err := xml.Marshal(&comments)
-	if err != nil{
-		log.Println("could not convert comment to xml",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
+	xmlComment, err := xml.Marshal(&comments)
+	if err != nil {
+		log.Println("could not convert comment to xml", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse xml"))
 	}
-	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
+	return e.String(http.StatusOK, fmt.Sprint(string(jsonComment), "\n", string(xmlComment)))
 }
 
 // @Summary Create comment
@@ -84,24 +84,24 @@ func GetAllComment(e echo.Context) error{
 // @Produce xml
 // @Success 200 {integer} integer 1
 // @Router /comment/ [post]
-func CreateComment(e echo.Context) error{
+func CreateComment(e echo.Context) error {
 	var newComment entity.Comment
 	json.NewDecoder(e.Request().Body).Decode(&newComment)
 
 	gormDB := db.OpenDataBase()
 	gormDB.Create(&newComment)
 
-	jsonComment,err := json.Marshal(&newComment)
-	if err != nil{
-		log.Println("could not convert comment to json",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse json"))
+	jsonComment, err := json.Marshal(&newComment)
+	if err != nil {
+		log.Println("could not convert comment to json", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse json"))
 	}
-	xmlComment,err := xml.Marshal(&newComment)
-	if err != nil{
-		log.Println("could not convert comment to xml",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
+	xmlComment, err := xml.Marshal(&newComment)
+	if err != nil {
+		log.Println("could not convert comment to xml", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse xml"))
 	}
-	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
+	return e.String(http.StatusOK, fmt.Sprint(string(jsonComment), "\n", string(xmlComment)))
 }
 
 // @Summary Delete comment
@@ -114,11 +114,11 @@ func CreateComment(e echo.Context) error{
 // @Param id path int true "Comment ID"
 // @Success 200 {integer} integer 1
 // @Router /comment/:id [post]
-func DeleteComment(e echo.Context) error{
+func DeleteComment(e echo.Context) error {
 	id := e.Param("id")
-	idStr,err := strconv.Atoi(id)
-	if err != nil{
-		log.Println("could not convert id to int",err.Error())
+	idStr, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println("could not convert id to int", err.Error())
 	}
 
 	var newComment entity.Comment
@@ -126,17 +126,17 @@ func DeleteComment(e echo.Context) error{
 	gormDB.First(&newComment, idStr)
 	gormDB.Delete(&entity.Comment{}, idStr)
 
-	jsonComment,err := json.Marshal(&newComment)
-	if err != nil{
-		log.Println("could not convert comment to json",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse json"))
+	jsonComment, err := json.Marshal(&newComment)
+	if err != nil {
+		log.Println("could not convert comment to json", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse json"))
 	}
-	xmlComment,err := xml.Marshal(&newComment)
-	if err != nil{
-		log.Println("could not convert comment to xml",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
+	xmlComment, err := xml.Marshal(&newComment)
+	if err != nil {
+		log.Println("could not convert comment to xml", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse xml"))
 	}
-	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
+	return e.String(http.StatusOK, fmt.Sprint(string(jsonComment), "\n", string(xmlComment)))
 }
 
 // @Summary Update comment
@@ -148,11 +148,11 @@ func DeleteComment(e echo.Context) error{
 // @Produce xml
 // @Success 200 {integer} integer 1
 // @Router /comment/:id [put]
-func UpdateComment(e echo.Context) error{
+func UpdateComment(e echo.Context) error {
 	id := e.Param("id")
 
-	idStr,err := strconv.Atoi(id)
-	if err != nil{
+	idStr, err := strconv.Atoi(id)
+	if err != nil {
 		log.Println("could not convert id to int")
 	}
 
@@ -160,22 +160,22 @@ func UpdateComment(e echo.Context) error{
 	json.NewDecoder(e.Request().Body).Decode(&newComment)
 
 	gormDB := db.OpenDataBase()
-	gormDB.Model(&entity.Post{}).Where("id = ?",idStr).Updates(entity.Comment{
+	gormDB.Model(&entity.Post{}).Where("id = ?", idStr).Updates(entity.Comment{
 		PostID: newComment.PostID,
-		Name:  	newComment.Name,
+		Name:   newComment.Name,
 		Email:  newComment.Email,
 		Body:   newComment.Body,
 	})
 
-	jsonComment,err := json.Marshal(&newComment)
-	if err != nil{
-		log.Println("could not convert comment to json",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse json"))
+	jsonComment, err := json.Marshal(&newComment)
+	if err != nil {
+		log.Println("could not convert comment to json", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse json"))
 	}
-	xmlComment,err := xml.Marshal(&newComment)
-	if err != nil{
-		log.Println("could not convert comment to xml",err.Error())
-		return e.String(http.StatusNotFound,fmt.Sprint("could not parse xml"))
+	xmlComment, err := xml.Marshal(&newComment)
+	if err != nil {
+		log.Println("could not convert comment to xml", err.Error())
+		return e.String(http.StatusNotFound, fmt.Sprint("could not parse xml"))
 	}
-	return e.String(http.StatusOK,fmt.Sprint(string(jsonComment),"\n",string(xmlComment)))
+	return e.String(http.StatusOK, fmt.Sprint(string(jsonComment), "\n", string(xmlComment)))
 }

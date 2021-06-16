@@ -1,10 +1,10 @@
 package operation
 
 import (
-	"awesomeProject/nix/entity"
-	"awesomeProject/nix/pkg/db"
 	"encoding/json"
 	"fmt"
+	"github.com/bogdanserdinov/go-mysql/entity"
+	"github.com/bogdanserdinov/go-mysql/pkg/db"
 	"log"
 	"net/http"
 	"sync"
@@ -12,7 +12,7 @@ import (
 
 // GetComment required for getting comments from comment on JSON placeholder
 func GetComment(p entity.Post) {
-	url := fmt.Sprintf("https://jsonplaceholder.typicode.com/comments?postId=%d",p.ID)
+	url := fmt.Sprintf("https://jsonplaceholder.typicode.com/comments?postId=%d", p.ID)
 	response, err := http.Get(url)
 	if err != nil {
 		log.Fatal("failed to get json command : ", err)
@@ -32,7 +32,7 @@ func GetComment(p entity.Post) {
 	var mutex = &sync.Mutex{}
 
 	gormDB := db.OpenDataBase()
-	for _,value := range c{
-		go db.WriteToDBComment(value,gormDB,mutex)
+	for _, value := range c {
+		go db.WriteToDBComment(value, gormDB, mutex)
 	}
 }
